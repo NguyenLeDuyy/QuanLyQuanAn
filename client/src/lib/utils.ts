@@ -36,3 +36,11 @@ export const handleErrorApi = ({ error, setError, duration }: {
 export const normalizePath = (path: string) => {
   return path.startsWith('/') ? path.slice(1) : path
 }
+
+const isBrowser = typeof window !== 'undefined'
+
+export const getAccessTokenFromLocalStorage = () =>
+  isBrowser ? localStorage.getItem('accessToken') : null
+
+export const getRefreshTokenFromLocalStorage = () =>
+  isBrowser ? localStorage.getItem('refreshToken') : null
