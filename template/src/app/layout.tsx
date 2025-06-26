@@ -2,8 +2,7 @@ import type { Metadata } from 'next'
 import { Inter as FontSans } from 'next/font/google'
 import './globals.css'
 import { cn } from '@/lib/utils'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Toaster, toast } from 'sonner'
+import { Toaster } from '@/components/ui/toaster'
 import { ThemeProvider } from '@/components/theme-provider'
 
 const fontSans = FontSans({
@@ -25,7 +24,7 @@ export default function RootLayout({
       <body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable)}>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
           {children}
-          <Toaster richColors />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
