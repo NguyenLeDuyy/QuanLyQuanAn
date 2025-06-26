@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import envConfig from "../../config";
+import envConfig from "../config";
 
 
 const inter = Inter({

@@ -25,7 +25,7 @@ import indicatorRoutes from '@/routes/indicator.route'
 import autoRemoveRefreshTokenJob from '@/jobs/autoRemoveRefreshToken.job'
 
 const fastify = Fastify({
-  logger: false
+  logger: true
 })
 
 // Run the server!
