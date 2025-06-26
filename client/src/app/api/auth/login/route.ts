@@ -1,4 +1,4 @@
-import AuthApiRequest from "@/apiRequests/auth";
+import authApiRequest from "@/apiRequests/auth";
 import { LoginBodyType } from "@/schemaValidations/auth.schema";
 import { cookies } from "next/headers";
 import jwt from 'jsonwebtoken'
@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     // Sửa lỗi: Bỏ `await` vì cookies() là hàm đồng bộ
     const cookieStore = await cookies()
     try {
-        const { payload } = await AuthApiRequest.sLogin(body);
+        const { payload } = await authApiRequest.sLogin(body);
         const { accessToken, refreshToken } = payload.data
 
         const decodedAccessToken = jwt.decode(accessToken) as { exp: number };

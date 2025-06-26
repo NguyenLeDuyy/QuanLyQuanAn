@@ -7,8 +7,13 @@ import { useForm } from 'react-hook-form'
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { LoginBody, LoginBodyType } from '@/schemaValidations/auth.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useLoginMutation } from '@/queries/useAuth'
+import { toast } from 'sonner'
+import { handleErrorApi } from '@/lib/utils'
 
 export default function LoginForm() {
+
+  const loginMutation = useLoginMutation()
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(LoginBody),
     defaultValues: {
@@ -17,6 +22,23 @@ export default function LoginForm() {
     }
   })
 
+  const onSubmit = async (data: LoginBodyType) => {
+    // Khi nhấn submit thì react hook form sẽ validate form bằng zod schema
+    // Nếu không qua vòng này thì sẽ không gọi đến API
+    if (loginMutation.isPending) return
+    try {
+      const result = await loginMutation.mutateAsync(data)
+      toast.success('Đăng nhập thành công!', {
+        description: `Chào mừng bạn trở lại, ${result.payload.data.account.name}!`
+      })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      handleErrorApi({
+        error, setError: form.setError
+      })
+    }
+  }
+
   return (
     <Card className='mx-auto max-w-sm'>
       <CardHeader>
@@ -24,8 +46,11 @@ export default function LoginForm() {
         <CardDescription>Nhập email và mật khẩu của bạn để đăng nhập vào hệ thống</CardDescription>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
-          <form className='space-y-2 max-w-[600px] flex-shrink-0 w-full' noValidate>
+        <Form {...form} >
+          <form className='space-y-2 max-w-[600px] flex-shrink-0 w-full' noValidate onSubmit={form.handleSubmit(onSubmit, err => {
+            console.error('Form validation errors:', err)
+            toast.error('Vui lòng kiểm tra lại thông tin đăng nhập của bạn.')
+          })}>
             <div className='grid gap-4'>
               <FormField
                 control={form.control}
@@ -65,6 +90,6 @@ export default function LoginForm() {
           </form>
         </Form>
       </CardContent>
-    </Card>
+    </Card >
   )
 }
