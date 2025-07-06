@@ -18,14 +18,14 @@ export async function POST(request: Request) {
         cookieStore.set('accessToken', accessToken, {
             httpOnly: true,
             path: '/',
-            expires: new Date(decodedAccessToken.exp * 1000), // Dùng new Date() để rõ ràng hơn
+            expires: decodedAccessToken.exp * 1000, // Dùng new Date() để rõ ràng hơn
             secure: true,
             sameSite: 'lax'
         })
         cookieStore.set('refreshToken', refreshToken, {
             httpOnly: true,
             path: '/',
-            expires: new Date(decodedRefreshToken.exp * 1000),
+            expires: decodedRefreshToken.exp * 1000,
             secure: true,
             sameSite: 'lax'
         })
