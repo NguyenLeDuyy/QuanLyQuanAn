@@ -13,7 +13,7 @@ import Link from 'next/link'
 import { useLogoutMutation } from '@/queries/useAuth'
 import { handleErrorApi } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
-import { useAccountMe } from '@/queries/useAccount'
+import { useAccountMeMutation } from '@/queries/useAccount'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const account = {
@@ -24,7 +24,7 @@ const account = {
 export default function DropdownAvatar() {
   const logoutMutation = useLogoutMutation()
   const router = useRouter()
-  const { data } = useAccountMe()
+  const { data } = useAccountMeMutation()
   const account = data?.payload.data
   const logout = async () => {
     if (logoutMutation.isPending) return
