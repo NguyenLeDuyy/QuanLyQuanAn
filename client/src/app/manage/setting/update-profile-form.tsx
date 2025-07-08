@@ -26,7 +26,7 @@ export default function UpdateProfileForm() {
     resolver: zodResolver(UpdateMeBody),
     defaultValues: {
       name: '',
-      avatar: ''
+      avatar: undefined
     }
   })
 
