@@ -36,7 +36,7 @@ export default function EditEmployee({
   setId: (value: number | undefined) => void;
   onSubmitSuccess?: () => void;
 }) {
-  console.log(id);
+  // console.log(id);
   const [file, setFile] = useState<File | null>(null);
   const avatarInputRef = useRef<HTMLInputElement | null>(null);
   const { data } = useGetAccount({ id: id as number, enabled: Boolean(id) });
@@ -98,10 +98,10 @@ export default function EditEmployee({
       }
       const result = await updateEmployeeMutation.mutateAsync(body);
       toast.success(result.payload.message);
-      console.log(result);
+      // console.log(result);
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       onSubmitSuccess && onSubmitSuccess();
-      setId(undefined);
+      reset();
     } catch (error) {
       handleErrorApi({
         error,
@@ -110,12 +110,17 @@ export default function EditEmployee({
     }
   };
 
+  const reset = () => {
+    setId(undefined);
+    setFile(null);
+  };
+
   return (
     <Dialog
       open={Boolean(id)}
       onOpenChange={(value) => {
         if (!value) {
-          setId(undefined);
+          reset();
         }
       }}
     >
