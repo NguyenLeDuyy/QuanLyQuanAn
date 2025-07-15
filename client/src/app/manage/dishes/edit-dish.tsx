@@ -60,7 +60,7 @@ export default function EditDish({
       name: "",
       description: "",
       price: 0,
-      image: "",
+      image: undefined,
       status: DishStatus.Unavailable,
     },
   });
