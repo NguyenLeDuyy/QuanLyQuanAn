@@ -2,7 +2,6 @@ import dishApiRequest from "@/apiRequests/dish";
 import { formatCurrency } from "@/lib/utils";
 import { DishListResType } from "@/schemaValidations/dish.schema";
 import Image from "next/image";
-import { toast } from "sonner";
 
 export default async function Home() {
   let dishList: DishListResType["data"] = [];
@@ -13,8 +12,8 @@ export default async function Home() {
     } = result;
     dishList = data;
     console.log(dishList);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    toast.error("Lỗi");
     return <>Something went wrong.</>;
   }
   return (

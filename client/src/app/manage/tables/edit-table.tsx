@@ -76,7 +76,7 @@ export default function EditTable({
   const onSubmit = async (values: UpdateTableBodyType) => {
     if (updateTableMutation.isPending) return;
     try {
-      let body: UpdateTableBodyType & { id: number } = {
+      const body: UpdateTableBodyType & { id: number } = {
         id: id as number,
         ...values,
       };

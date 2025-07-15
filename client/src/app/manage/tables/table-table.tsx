@@ -206,7 +206,6 @@ export default function TableTable() {
   // const params = Object.fromEntries(searchParam.entries())
   const [tableIdEdit, setTableIdEdit] = useState<number | undefined>();
   const [tableDelete, setTableDelete] = useState<TableItem | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
   const tableListQuery = useGetTableListQuery();
 

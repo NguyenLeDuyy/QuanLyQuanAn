@@ -4,7 +4,9 @@ import { CreateDishBodyType, DishListResType, DishResType, UpdateDishBodyType } 
 const prefix = '/dishes'
 
 const dishApiRequest = {
-    list: () => http.get<DishListResType>(`${prefix}`),
+    // Note: Next.js 15 thì mặc định fetch sẽ là { cache: 'no-store'} => dynamic rendering page
+    // Note: Next.js 14 thì mặc định fetch sẽ là { cache: 'force-store'} nghĩa là cache (static rendering page)
+    list: () => http.get<DishListResType>(`${prefix}`, { cache: 'no-store' }),
     add: (body: CreateDishBodyType) => http.post<DishResType>(`${prefix}`, body),
 
     getDish: (id: number) => http.get<DishResType>(`${prefix}/${id}`),

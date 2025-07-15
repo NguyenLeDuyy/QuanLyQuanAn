@@ -23,8 +23,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 import { useGetAccount, useUpdateAccountMutation } from "@/queries/useAccount";
 import { useUploadMediaMutation } from "@/queries/useMedia";
-import { toast } from "sonner";
 import { handleErrorApi } from "@/lib/utils";
+import { Role } from "@/constants/type";
+import { toast } from "sonner";
 
 export default function EditEmployee({
   id,
@@ -50,6 +51,7 @@ export default function EditEmployee({
       password: undefined,
       confirmPassword: undefined,
       changePassword: false,
+      role: Role.Employee,
     },
   });
   const avatar = form.watch("avatar");
