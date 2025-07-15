@@ -97,7 +97,7 @@ export const columns: ColumnDef<TableItem>[] = [
         {
           <QRCodeTable
             token={row.getValue("token")}
-            tableNumber={row.getValue("tableNumber")}
+            tableNumber={row.getValue("number")}
           />
         }
       </div>

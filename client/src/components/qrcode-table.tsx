@@ -1,3 +1,4 @@
+"use client";
 import { getTableLink } from "@/lib/utils";
 import QRCode from "qrcode";
 import { useEffect, useRef } from "react";
@@ -5,7 +6,6 @@ import { useEffect, useRef } from "react";
 export default function QRCodeTable({
   token,
   tableNumber,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   width = 250,
 }: {
   token: string;
@@ -14,19 +14,50 @@ export default function QRCodeTable({
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
-    const canvas = canvasRef.current;
-
+    // Hiện tại: Thư viện QRCode nó sẽ vẽ lên cái thẻ Canvas
+    // Bây giờ: Chúng ta sẽ tạo 1 cái thẻ canvas ảo để thư viện QRCode code nó vẽ QR lên trên đó.
+    // Và chúng ta sẽ edit thẻ canvas thật
+    // Cuối cùng thì chúng ta sẽ đưa cái thẻ canvas ảo chứa QR Code ở trên vào thẻ Canvas thật
+    const canvas = canvasRef.current!;
+    canvas.height = width + 70;
+    canvas.width = width;
+    const canvasContext = canvas.getContext("2d")!;
+    canvasContext.fillStyle = "#fff";
+    canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+    canvasContext.font = "20px Arial";
+    canvasContext.textAlign = "center";
+    canvasContext.fillStyle = "#000";
+    canvasContext.fillText(
+      `Quán ăn Duy Lê`,
+      canvas.width / 2,
+      canvas.width + 15
+    );
+    canvasContext.fillText(
+      `Bàn số ${tableNumber}`,
+      canvas.width / 2,
+      canvas.width + 37
+    );
+    canvasContext.fillText(
+      `Quét mã QR để gọi món`,
+      canvas.width / 2,
+      canvas.width + 60
+    );
+    const virtualCanvas = document.createElement("canvas");
     QRCode.toCanvas(
-      canvas,
+      virtualCanvas,
       getTableLink({
-        token: token,
-        tableNumber: tableNumber,
+        token,
+        tableNumber,
       }),
+      {
+        width,
+        margin: 4,
+      },
       function (error) {
         if (error) console.error(error);
-        console.log("success!");
+        canvasContext.drawImage(virtualCanvas, 0, 0, width, width);
       }
     );
-  }, [token, tableNumber]);
+  }, [token, width, tableNumber]);
   return <canvas ref={canvasRef} />;
 }
