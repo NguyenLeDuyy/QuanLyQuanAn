@@ -44,12 +44,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { getVietnameseTableStatus } from "@/lib/utils";
+import { getTableLink, getVietnameseTableStatus } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 import AutoPagination from "@/components/auto-pagination";
 import { TableListResType } from "@/schemaValidations/table.schema";
 import EditTable from "@/app/manage/tables/edit-table";
 import AddTable from "@/app/manage/tables/add-table";
+import { useGetTableListQuery } from "@/queries/useTable";
+import QRCodeTable from "@/components/qrcode-table";
 
 type TableItem = TableListResType["data"][0];
 
@@ -90,7 +92,16 @@ export const columns: ColumnDef<TableItem>[] = [
   {
     accessorKey: "token",
     header: "QR Code",
-    cell: ({ row }) => <div>{row.getValue("number")}</div>,
+    cell: ({ row }) => (
+      <div>
+        {
+          <QRCodeTable
+            token={row.getValue("token")}
+            tableNumber={row.getValue("tableNumber")}
+          />
+        }
+      </div>
+    ),
   },
   {
     id: "actions",
@@ -169,7 +180,10 @@ export default function TableTable() {
   const [tableIdEdit, setTableIdEdit] = useState<number | undefined>();
   const [tableDelete, setTableDelete] = useState<TableItem | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any[] = [];
+
+  const tableListQuery = useGetTableListQuery();
+
+  const data = tableListQuery.data?.payload.data ?? [];
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
