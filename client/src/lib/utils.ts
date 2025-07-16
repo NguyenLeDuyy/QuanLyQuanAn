@@ -41,12 +41,6 @@ export const normalizePath = (path: string) => {
 
 const isBrowser = typeof window !== 'undefined'
 
-export const getAccessTokenFromLocalStorage = () =>
-  isBrowser ? localStorage.getItem('accessToken') : null
-
-export const getRefreshTokenFromLocalStorage = () =>
-  isBrowser ? localStorage.getItem('refreshToken') : null
-
 export const formatCurrency = (number: number) => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -94,3 +88,16 @@ export const getVietnameseTableStatus = (status: (typeof TableStatus)[keyof type
 export const getTableLink = ({ token, tableNumber }: { token: string; tableNumber: number }) => {
   return envConfig.NEXT_PUBLIC_URL + '/tables/' + tableNumber + '?token=' + token
 }
+
+export const getAccessTokenFromLocalStorage = () =>
+  isBrowser ? localStorage.getItem('accessToken') : null
+
+export const getRefreshTokenFromLocalStorage = () =>
+  isBrowser ? localStorage.getItem('refreshToken') : null
+
+
+export const setAccessTokenToLocalStorage = (token: string) =>
+  isBrowser && localStorage.setItem('accessToken', token)
+
+export const setRefreshTokenToLocalStorage = (token: string) =>
+  isBrowser && localStorage.setItem('refreshToken', token)
