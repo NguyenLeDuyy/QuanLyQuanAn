@@ -28,5 +28,5 @@ export default function LogoutPage() {
       }, 1000);
     });
   }, [mutateAsync, refreshTokenFromUrl, router]);
-  return <div>Logout Page</div>;
+  return <div>Logging out....</div>;
 }
