@@ -19,8 +19,8 @@ export default function LogoutPage() {
     )
       return;
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ref.current = mutateAsync;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mutateAsync().then((res) => {
       router.push("/login");
       setTimeout(() => {

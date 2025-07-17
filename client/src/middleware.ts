@@ -20,9 +20,9 @@ export function middleware(request: NextRequest) {
     }
     // Đăng nhập rồi nhưng accessToken đã hết hạn 
     if (privatePaths.some(path => pathname.startsWith(path) && !accessToken && refreshToken)) {
-        console.log("Nhảy vào đây vì accessToken đã hết hạn")
-        const url = new URL('/logout', request.url)
+        const url = new URL('/refresh-token', request.url)
         url.searchParams.set('refreshToken', refreshToken ?? '')
+        url.searchParams.set('redirect', pathname)
         return NextResponse.redirect(url)
     }
 
