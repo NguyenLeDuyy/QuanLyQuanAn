@@ -1,23 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import {
-  checkAndRefreshToken,
-  getAccessTokenFromLocalStorage,
-  getRefreshTokenFromLocalStorage,
-  setAccessTokenToLocalStorage,
-  setRefreshTokenToLocalStorage,
-} from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { checkAndRefreshToken } from "@/lib/utils";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import jwt from "jsonwebtoken";
-import authApiRequest from "@/apiRequests/auth";
 
 // Những page sau sẽ không check refresh token
 const UNAUTHENTICATED_PATH = ["/login", "/register", "/refresh-token"];
 export default function RefreshToken() {
   const pathname = usePathname();
-  console.log(pathname);
+  const router = useRouter();
+  // console.log(pathname);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let interval: any = null;
   useEffect(() => {
@@ -26,15 +18,25 @@ export default function RefreshToken() {
     checkAndRefreshToken({
       onError: () => {
         clearInterval(interval);
+        router.push("/login");
       },
     });
     // Timeout interval phải < accessToken's expired time
     // Ví dụ tgia hết hạn của AT là 10s thì 1s ta sẽ check 1 lần
     const TIMEOUT = 1000;
-    interval = setInterval(checkAndRefreshToken, TIMEOUT);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    interval = setInterval(
+      () =>
+        checkAndRefreshToken({
+          onError: () => {
+            clearInterval(interval);
+          },
+        }),
+      TIMEOUT
+    );
     return () => {
       clearInterval(interval);
     };
-  }, [pathname]);
+  }, [pathname, router]);
   return null;
 }
