@@ -132,13 +132,17 @@ export const checkAndRefreshToken = async (
   };
   // Thời đeierm hết hạn của token là tính theo epoch time (s)
   // Còn khi dùng cú pháp new Date().getTime() thì nó trả về epoch time (ms)
-  const now = Math.round(new Date().getTime() / 1000);
+  const now = (new Date().getTime() / 1000) - 1;
   // Trường hợp refresh token đã hết hạn thì logout
   if (decodedRefreshToken.exp <= now) {
     // Xóa access token và refresh token khỏi localStorage
+    console.log("Refresh token đã hết hạn, đăng xuất");
     removeTokensFromLocalStorage();
-    return param?.onError && param.onError()
-      ;
+    // Xóa cookie phía client
+    if (isBrowser) {
+      await fetch("/api/auth/logout", { method: "POST" });
+    }
+    return param?.onError && param.onError();
   }
   // Trường hợp refresh token thì không xử lý nữa
   // Thì mình sẽ ktra còn 1/3 thời gian (3s) thì sẽ cho refresh token lại

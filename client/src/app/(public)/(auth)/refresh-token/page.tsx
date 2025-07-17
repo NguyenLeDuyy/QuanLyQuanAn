@@ -21,6 +21,9 @@ export default function RefreshToken() {
         onSuccess: () => {
           router.push(redirectPathname || "/");
         },
+        onError: () => {
+          router.push("/login");
+        },
       });
     } else {
       router.push("/");
