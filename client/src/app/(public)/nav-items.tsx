@@ -11,6 +11,7 @@ const menuItems = [
   {
     title: "Đơn hàng",
     href: "/orders",
+    authRequired: true,
   },
   {
     title: "Đăng nhập",
@@ -36,9 +37,8 @@ export default function NavItems({ className }: { className?: string }) {
     if (
       (item.authRequired === false && isAuth) ||
       (item.authRequired === true && !isAuth)
-    ) {
+    )
       return null;
-    }
 
     return (
       <Link href={item.href} key={item.href} className={className}>
