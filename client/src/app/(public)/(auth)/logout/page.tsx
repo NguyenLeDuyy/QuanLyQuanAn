@@ -12,7 +12,7 @@ export default function LogoutPage() {
   const searchParams = useSearchParams();
   const refreshTokenFromUrl = searchParams.get("refreshToken");
   const accessTokenFromUrl = searchParams.get("accessToken");
-  const { setIsAuth } = useAppContext();
+  const { setRole } = useAppContext();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ref = useRef<any>(null);
   useEffect(() => {
@@ -30,11 +30,11 @@ export default function LogoutPage() {
           ref.current = null;
         }, 1000);
         router.push("/login");
-        setIsAuth(false);
+        setRole();
       });
     } else {
       router.push("/");
     }
-  }, [accessTokenFromUrl, mutateAsync, refreshTokenFromUrl, router]);
+  }, [accessTokenFromUrl, mutateAsync, refreshTokenFromUrl, router, setRole]);
   return <div>Logging out....</div>;
 }

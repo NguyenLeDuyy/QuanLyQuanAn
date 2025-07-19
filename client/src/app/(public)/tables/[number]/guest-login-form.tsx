@@ -12,15 +12,19 @@ import {
 } from "@/schemaValidations/guest.schema";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import { useGuestLoginMutation } from "@/queries/useGuest";
+import { useAppContext } from "@/components/app-provider";
+import { handleErrorApi } from "@/lib/utils";
 
 export default function GuestLoginForm() {
-  const searchParams = useSearchParams();
-  const params = useParams();
-  console.log(params, searchParams.get("token"));
-  const tableNumber = Number(params.number);
-  const token = searchParams.get("token");
-  const router = useRouter();
-
+  const searchParams = useSearchParams()
+  const params = useParams()
+  // console.log(params, searchParams.get("token"));
+  const tableNumber = Number(params.number)
+  const loginMutation = useGuestLoginMutation()
+  const token = searchParams.get("token")
+  const router = useRouter()
+  const { setRole } = useAppContext();
   const form = useForm<GuestLoginBodyType>({
     resolver: zodResolver(GuestLoginBody),
     defaultValues: {
@@ -37,7 +41,14 @@ export default function GuestLoginForm() {
   }, [token, router]);
 
   async function onSubmit(values: GuestLoginBodyType) {
-    console.log(values);
+    if (loginMutation.isPending) return;
+    try {
+      const result = await loginMutation.mutateAsync(values);
+      setRole(result.payload.data.guest.role)
+      router.push("/guest/menu")
+    } catch (error) {
+      handleErrorApi({ error, setError: form.setError })
+    }
   }
 
   return (
