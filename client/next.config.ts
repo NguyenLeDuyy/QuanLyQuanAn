@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
 
 module.exports = {
   images: {
-    remotePatterns: [new URL('http://localhost:4000/**')],
+    remotePatterns: [new URL('http://localhost:4000/**'), new URL('https://via.placeholder.com/**')],
   },
 }
 
