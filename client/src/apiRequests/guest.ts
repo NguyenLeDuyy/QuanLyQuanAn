@@ -25,10 +25,8 @@ const guestApiRequest = {
     refreshToken: () => http.post<RefreshTokenResType>('/api/guest/auth/refresh-token', null, {
         baseUrl: ''
     }),
-    order: (body: GuestCreateOrdersBodyType) =>
-        http.post<GuestCreateOrdersResType>('/guest/orders', body),
-    getOrderList: () =>
-        http.get<GuestGetOrdersResType>('/guest/orders')
+    order: (body: GuestCreateOrdersBodyType) => http.post<GuestCreateOrdersResType>('/guest/orders', body),
+    getOrderList: () => http.get<GuestGetOrdersResType>('/guest/orders')
 }
 
 export default guestApiRequest;
