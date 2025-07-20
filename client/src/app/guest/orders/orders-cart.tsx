@@ -7,6 +7,7 @@ import { useGuestGetOrderListQuery } from "@/queries/useGuest"
 import { UpdateOrderResType } from "@/schemaValidations/order.schema"
 import Image from "next/image"
 import { useEffect, useMemo } from "react"
+import { toast } from "sonner"
 
 export default function OrderCart() {
     const { data, refetch } = useGuestGetOrderListQuery()
@@ -30,9 +31,13 @@ export default function OrderCart() {
             console.log("disconnect")
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         function onUpdateOrder(data: UpdateOrderResType['data']) {
-            // console.log(data)
+            console.log(data)
+            const { dishSnapshot: { name }, quantity, status } = data
+            toast.success("", {
+                description: `Món ${name} (SL: ${quantity}) vừa được cập nhật sang trạng thái ${getVietnameseOrderStatus(status)}`,
+                position: "top-center"
+            });
             refetch();
         }
 

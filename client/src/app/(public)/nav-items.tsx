@@ -7,6 +7,17 @@ import { useGuestLogoutMutation } from "@/queries/useGuest";
 import { RoleType } from "@/types/jwt.types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 const menuItems: {
   title: string,
@@ -79,8 +90,23 @@ export default function NavItems({ className }: { className?: string }) {
       }
       return null;
     })}
-    {role && <div className={cn(className, 'cursor-pointer')} onClick={logout}>
-      Đăng xuất
-    </div>}
+    {role && <AlertDialog>
+      <AlertDialogTrigger><div className={cn(className, 'cursor-pointer')}>
+        Đăng xuất
+      </div></AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Bạn có muốn đăng xuất không?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Việc đăng xuất có thể làm mất đi hóa đơn của bạn
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Thoát</AlertDialogCancel>
+          <AlertDialogAction onClick={logout}>OK</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>}
+
   </>;
 }
