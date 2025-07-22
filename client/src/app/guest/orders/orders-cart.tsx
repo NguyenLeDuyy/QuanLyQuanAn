@@ -50,7 +50,7 @@ export default function OrderCart() {
             socket.off("connect", onConnect);
             socket.off("disconnect", onDisconnect);
         };
-    }, []);
+    }, [refetch]);
     return (
         <>
             <div className="space-y-4">{orders?.map((order, index) => (

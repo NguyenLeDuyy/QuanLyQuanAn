@@ -9,7 +9,7 @@ export const useUpdateOrderMutation = () => {
             ...body
         }: UpdateOrderBodyType & {
             orderId: number
-        }) => orderApiRequest.updateOrder(orderId, body)
+        }) => orderApiRequest.updateOrder(orderId, body),
     })
 }
 
