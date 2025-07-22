@@ -5,7 +5,7 @@ import { OrderStatus } from "@/constants/type"
 import socket from "@/lib/socket"
 import { formatCurrency, getVietnameseOrderStatus } from "@/lib/utils"
 import { useGuestGetOrderListQuery } from "@/queries/useGuest"
-import { UpdateOrderResType } from "@/schemaValidations/order.schema"
+import { PayGuestOrdersResType, UpdateOrderResType } from "@/schemaValidations/order.schema"
 import Image from "next/image"
 import { useEffect, useMemo } from "react"
 import { toast } from "sonner"
@@ -59,6 +59,7 @@ export default function OrderCart() {
             console.log("disconnect")
         }
 
+
         function onUpdateOrder(data: UpdateOrderResType['data']) {
             console.log(data)
             const { dishSnapshot: { name }, quantity, status } = data
@@ -69,14 +70,27 @@ export default function OrderCart() {
             refetch();
         }
 
+
+        function onPayment(data: PayGuestOrdersResType['data']) {
+            console.log(data)
+            const { guest } = data[0]
+            toast.success("", {
+                description: `${guest?.name} tại bàn ${guest?.tableNumber} vừa thanh toán thành công ${data.length} đơn`,
+                position: "top-center"
+            });
+            refetch();
+        }
+
         socket.on('update-order', onUpdateOrder)
 
         socket.on("connect", onConnect);
         socket.on("disconnect", onDisconnect);
+        socket.on('payment', onPayment)
 
         return () => {
             socket.off("connect", onConnect);
             socket.off("disconnect", onDisconnect);
+            socket.off('payment', onPayment)
         };
     }, [refetch]);
     return (

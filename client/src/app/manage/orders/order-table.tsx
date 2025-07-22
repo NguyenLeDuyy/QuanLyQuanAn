@@ -171,22 +171,34 @@ export default function OrderTable() {
       console.log(data)
       const { guest } = data[0]
       toast.success("", {
-        description: `${guest?.name} tại bàn ${guest?.tableNumber} vừa đặt ${data.length} món`,
+        description: `${guest?.name} tại bàn ${guest?.tableNumber} vừa đặt ${data.length} đơn`,
         position: "top-center"
       });
       refetch()
+    }
+
+    function onPayment(data: PayGuestOrdersResType['data']) {
+      console.log(data)
+      const { guest } = data[0]
+      toast.success("", {
+        description: `${guest?.name} tại bàn ${guest?.tableNumber} vừa thanh toán thành công ${data.length} đơn`,
+        position: "top-center"
+      });
+      refetch();
     }
 
     socket.on('update-order', onUpdateOrder)
     socket.on('new-order', onNewOrder)
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
+    socket.on('payment', onPayment)
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("update-order", onUpdateOrder)
       socket.off("new-order", onNewOrder)
+      socket.off("payment", onPayment)
     };
   }, [fromDate, refetchOrderList, toDate]);
 
