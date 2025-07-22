@@ -18,11 +18,15 @@ import {
 } from "@/lib/utils";
 import { RoleType } from "@/types/jwt.types";
 
+// Default:
+// stateTime = 0,
+// Setting: staleTime: 1000 * 60 // Thời gian fetch lại API cho các trang đã fetch API rồi là 1p
+// gcTime:  5p // Thời gian đưa data vào sọt rác 
+
 // Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnMount: false,
       refetchOnWindowFocus: false,
     },
   },
