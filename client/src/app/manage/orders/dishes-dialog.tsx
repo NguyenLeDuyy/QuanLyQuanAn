@@ -175,6 +175,11 @@ export function DishesDialog({ onChoose }: { onChoose: (dish: DishItem) => void 
                   page={table.getState().pagination.pageIndex + 1}
                   pageSize={table.getPageCount()}
                   pathname='/manage/dishes'
+                  isLink={false}
+                  onClick={pageNumber => table.setPagination({
+                    pageIndex: pageNumber - 1,
+                    pageSize: PAGE_SIZE
+                  })}
                 />
               </div>
             </div>
