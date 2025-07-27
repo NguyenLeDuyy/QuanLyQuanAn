@@ -4,9 +4,9 @@ import { useAppContext } from "@/components/app-provider";
 import { getRefreshTokenFromLocalStorage } from "@/lib/utils";
 import { useLogoutMutation } from "@/queries/useAuth";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, Suspense } from "react";
 
-export default function LogoutPage() {
+function Logout() {
   const { mutateAsync } = useLogoutMutation();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -37,4 +37,12 @@ export default function LogoutPage() {
     }
   }, [accessTokenFromUrl, mutateAsync, refreshTokenFromUrl, router, setRole]);
   return <div>Logging out....</div>;
+}
+
+export default function LogoutPage() {
+  return (
+    <Suspense fallback={<div>Logging out....</div>}>
+      <Logout />
+    </Suspense>
+  );
 }

@@ -133,7 +133,6 @@ export const checkAndRefreshToken = async (param?: {
   // Nếu chưa đăng nhập cũng không cho chạy
   if (!accessToken || !refreshToken) return;
   const decodedAccessToken = decodeToken(accessToken)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const decodedRefreshToken = decodeToken(refreshToken)
   // Thời đeierm hết hạn của token là tính theo epoch time (s)
   // Còn khi dùng cú pháp new Date().getTime() thì nó trả về epoch time (ms)
