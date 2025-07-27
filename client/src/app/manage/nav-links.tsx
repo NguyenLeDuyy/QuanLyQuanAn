@@ -5,9 +5,11 @@ import { cn } from '@/lib/utils'
 import { Package2, Settings } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useAppContext } from "@/components/app-provider";
 
 export default function NavLinks() {
   const pathname = usePathname()
+  const { role } = useAppContext()
 
   return (
     <TooltipProvider>
@@ -23,6 +25,8 @@ export default function NavLinks() {
 
           {menuItems.map((Item, index) => {
             const isActive = pathname === Item.href
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            if (!Item.roles.includes(role as any)) return null
             return (
               <Tooltip key={index}>
                 <TooltipTrigger asChild>

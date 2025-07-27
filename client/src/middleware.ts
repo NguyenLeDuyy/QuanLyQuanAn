@@ -6,6 +6,7 @@ const managePaths = ['/manage',]
 const guestPaths = ['/guest',]
 const privatePaths = [...managePaths, ...guestPaths]
 const unAuthPaths = ['/login',]
+const onlyOwnerPaths = ['/manage/accounts']
 
 
 // This function can be marked `async` if using `await` inside
@@ -43,7 +44,9 @@ export function middleware(request: NextRequest) {
         const issGuestGoToManagePath = role === Role.Guest && managePaths.some(path => pathname.startsWith(path))
         // Hoặc vào route guest nhưng không phải guest
         const isNotGuestGoToGuestPath = role !== Role.Guest && guestPaths.some(path => pathname.startsWith(path))
-        if (issGuestGoToManagePath || isNotGuestGoToGuestPath) {
+        // Không phải owner nhưng cố tình vào route owner
+        const isNotOwnerGoToOwnerPath = role !== Role.Owner && onlyOwnerPaths.some((path) => pathname.startsWith(path))
+        if (issGuestGoToManagePath || isNotGuestGoToGuestPath || isNotOwnerGoToOwnerPath) {
             return NextResponse.redirect(new URL('/', request.url))
         }
     }
