@@ -119,8 +119,11 @@ export const decodeToken = (token: string) => {
   return jwt.decode(token) as TokenPayload
 }
 
-export const checkAndRefreshToken = async (
-  param?: { onError?: () => void; onSuccess?: () => void }
+export const checkAndRefreshToken = async (param?: {
+  onError?: () => void;
+  onSuccess?: () => void;
+  force?: boolean
+}
 ) => {
   // Không nên đưa logic lấy access và refresh tokjen ra khỏi function `checkAndRefreshToken`
   // Vì để mỗi lần mà checkAndRefreshToken() đc gọi sẽ có 1 access và refresh token mới
@@ -151,10 +154,9 @@ export const checkAndRefreshToken = async (
   // Ví đụ aToken của chta có expired time là 10s
   // Thì tgian còn lại sẽ tính dựa trên công thức: decodedAccessToken.exp - now
   // Access token's Expired time base on công thức: decodedAccessToken.exp - decodedAccessToken.iat
-  if (
-    decodedAccessToken.exp - now <
+  if (param?.force || (decodedAccessToken.exp - now <
     (decodedAccessToken.exp - decodedAccessToken.iat) / 3
-  ) {
+  )) {
     // Goi API refresh token
     try {
       const role = decodedRefreshToken.role

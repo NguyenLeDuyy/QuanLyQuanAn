@@ -1,5 +1,6 @@
 "use client";
 
+import socket from "@/lib/socket";
 import { checkAndRefreshToken } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -15,26 +16,50 @@ export default function RefreshToken() {
   useEffect(() => {
     if (UNAUTHENTICATED_PATH.includes(pathname)) return;
     // Phải gọi lần đầu tiên, vì interval sẽ chạy sau tgian TIMEOUT
-    checkAndRefreshToken({
-      onError: () => {
-        clearInterval(interval);
-        router.push("/login");
-      },
-    });
+    const onRefreshToken = (force?: boolean) => {
+      // console.log('refresh token')
+      checkAndRefreshToken({
+        onError: () => {
+          clearInterval(interval);
+          router.push("/login");
+        },
+        force
+      });
+    }
+    onRefreshToken()
     // Timeout interval phải < accessToken's expired time
     // Ví dụ tgia hết hạn của AT là 10s thì 1s ta sẽ check 1 lần
     const TIMEOUT = 1000;
     // eslint-disable-next-line react-hooks/exhaustive-deps
     interval = setInterval(
-      () =>
-        checkAndRefreshToken({
-          onError: () => {
-            clearInterval(interval);
-          },
-        }),
+      onRefreshToken,
       TIMEOUT
     );
+
+    if (socket.connected) {
+      onConnect();
+    }
+
+    function onConnect() {
+      console.log("", socket.id)
+    }
+
+    function onDisconnect() {
+      console.log("disconnect")
+    }
+
+    function onRefreshTokenSocket() {
+      onRefreshToken(true)
+    }
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("refresh-token", onRefreshTokenSocket);
+
     return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("refresh-token", onRefreshTokenSocket);
       clearInterval(interval);
     };
   }, [pathname, router]);
