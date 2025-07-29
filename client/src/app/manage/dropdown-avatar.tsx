@@ -26,7 +26,7 @@ export default function DropdownAvatar() {
   const logoutMutation = useLogoutMutation();
   const router = useRouter();
   const { data } = useAccountMeMutation();
-  const { setRole } = useAppContext();
+  const { setRole, disconnectSocket } = useAppContext();
   const account = data?.payload.data;
   const logout = async () => {
     if (logoutMutation.isPending) return;
@@ -34,6 +34,7 @@ export default function DropdownAvatar() {
       await logoutMutation.mutateAsync();
       router.push("/");
       setRole();
+      disconnectSocket()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       handleErrorApi({
