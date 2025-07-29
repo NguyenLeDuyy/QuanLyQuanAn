@@ -36,8 +36,8 @@ import TableSkeleton from '@/app/manage/orders/table-skeleton'
 import { GuestCreateOrdersResType } from '@/schemaValidations/guest.schema'
 import { useGetOrderListQuery, useUpdateOrderMutation } from '@/queries/useOrder'
 import { useGetTableListQuery } from '@/queries/useTable'
-import socket from '@/lib/socket'
 import { toast } from 'sonner'
+import { useAppContext } from '@/components/app-provider'
 
 export const OrderTableContext = createContext({
   setOrderIdEdit: (value: number | undefined) => { },
@@ -89,6 +89,7 @@ export default function OrderTable() {
   })
   const updateOrderMutation = useUpdateOrderMutation();
   const { statics, orderObjectByGuestId, servingGuestByTableNumber } = useOrderService(orderList ?? [])
+  const { socket } = useAppContext()
 
   const changeStatus = async (body: {
     orderId: number
@@ -138,12 +139,12 @@ export default function OrderTable() {
   }
 
   useEffect(() => {
-    if (socket.connected) {
+    if (socket?.connected) {
       onConnect();
     }
 
     function onConnect() {
-      console.log("", socket.id)
+      console.log("", socket?.id)
     }
 
     function onDisconnect() {
@@ -187,20 +188,20 @@ export default function OrderTable() {
       refetch();
     }
 
-    socket.on('update-order', onUpdateOrder)
-    socket.on('new-order', onNewOrder)
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-    socket.on('payment', onPayment)
+    socket?.on('update-order', onUpdateOrder)
+    socket?.on('new-order', onNewOrder)
+    socket?.on("connect", onConnect);
+    socket?.on("disconnect", onDisconnect);
+    socket?.on('payment', onPayment)
 
     return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
-      socket.off("update-order", onUpdateOrder)
-      socket.off("new-order", onNewOrder)
-      socket.off("payment", onPayment)
+      socket?.off("connect", onConnect);
+      socket?.off("disconnect", onDisconnect);
+      socket?.off("update-order", onUpdateOrder)
+      socket?.off("new-order", onNewOrder)
+      socket?.off("payment", onPayment)
     };
-  }, [fromDate, refetchOrderList, toDate]);
+  }, [fromDate, refetchOrderList, socket, toDate]);
 
   return (
     <OrderTableContext.Provider

@@ -57,15 +57,16 @@ const menuItems: {
 // Do client biết người dùng đã đăng nhập hay chưa thông qua access token trong localStorage
 
 export default function NavItems({ className }: { className?: string }) {
-  const { role, setRole } = useAppContext();
+  const { role, setRole, disconnectSocket } = useAppContext();
   const router = useRouter();
   const logoutMutation = useGuestLogoutMutation();
   const logout = async () => {
     if (logoutMutation.isPending) return;
     try {
       await logoutMutation.mutateAsync();
-      router.push("/");
       setRole();
+      disconnectSocket()
+      router.push("/");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       handleErrorApi({

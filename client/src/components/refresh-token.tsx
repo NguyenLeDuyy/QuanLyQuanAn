@@ -1,6 +1,6 @@
 "use client";
 
-import socket from "@/lib/socket";
+import { useAppContext } from "@/components/app-provider";
 import { checkAndRefreshToken } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -10,6 +10,7 @@ const UNAUTHENTICATED_PATH = ["/login", "/register", "/refresh-token"];
 export default function RefreshToken() {
   const pathname = usePathname();
   const router = useRouter();
+  const { socket, disconnectSocket } = useAppContext()
   // console.log(pathname);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let interval: any = null;
@@ -21,6 +22,7 @@ export default function RefreshToken() {
       checkAndRefreshToken({
         onError: () => {
           clearInterval(interval);
+          disconnectSocket()
           router.push("/login");
         },
         force
@@ -36,12 +38,12 @@ export default function RefreshToken() {
       TIMEOUT
     );
 
-    if (socket.connected) {
+    if (socket?.connected) {
       onConnect();
     }
 
     function onConnect() {
-      console.log("", socket.id)
+      console.log("", socket?.id)
     }
 
     function onDisconnect() {
@@ -52,16 +54,16 @@ export default function RefreshToken() {
       onRefreshToken(true)
     }
 
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-    socket.on("refresh-token", onRefreshTokenSocket);
+    socket?.on("connect", onConnect);
+    socket?.on("disconnect", onDisconnect);
+    socket?.on("refresh-token", onRefreshTokenSocket);
 
     return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
-      socket.off("refresh-token", onRefreshTokenSocket);
+      socket?.off("connect", onConnect);
+      socket?.off("disconnect", onDisconnect);
+      socket?.off("refresh-token", onRefreshTokenSocket);
       clearInterval(interval);
     };
-  }, [pathname, router]);
+  }, [pathname, router, socket]);
   return null;
 }
