@@ -28,7 +28,7 @@ export default function QRCodeTable({
     canvasContext.textAlign = "center";
     canvasContext.fillStyle = "#000";
     canvasContext.fillText(
-      `Quán ăn Duy Lê`,
+      `Quán ăn Nhóm 1`,
       canvas.width / 2,
       canvas.width + 15
     );
